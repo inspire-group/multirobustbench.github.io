@@ -42,7 +42,7 @@ function generateGraphHTML(value, selected_set) {
             <div class='container' style="display: flex">
                 <div class='graph_container style='width:50%'><canvas id="${value}_sc_single" height="200"></canvas></div>
                 <div class='container' style="flex-grow:1">
-                    <div class='graph_container'><canvas id="${value}_cr_in_out"></canvas></div>
+                    <div class='graph_container'><canvas id="${value}_cr_in_out"  height="200"></canvas></div>
                 </div>
             </div>
             <div class='graph_container'><canvas id="${value}_cr_single" height="100"></canvas></div>
