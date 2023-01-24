@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="data/ata_accs.js"></script>
+    <script type="text/javascript" charset="utf8" src="data/def_accs.js"></script>
+    <script type="text/javascript" charset="utf8" src="scripts/utils.js"></script>
+    <script type="text/javascript" charset="utf8" src="scripts/main.js"></script>
+    <script type="text/javascript" charset="utf8" src="scripts/graphing.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="body_container">
+        <a href="#title_block" class="logo"><font face = "courier">MultiRobustBench</font></a>
+        <div class="header-right">
+          <a class="active" href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#metric_block">Leaderboards</a>
+        </div>
+        </div>
+    </div>
+    <div class="center body_container">
+    <div id="title_block"><h1><font face = "courier" size="50">MultiRobustBench</font></h1></div>
+    </div>
+    <div class="info body_container" id="about"> <p> 
+    <strong>MultiRobustBench is a standardized benchmark for evaluating adversarial robustness against multiple attacks.</strong> 
+    MultiRobustBench currently evaluates and ranks models based on performance on a set of 9 different attacks (L1, L2, Linf,
+    Elastic, L1 JPEG, Linf JPEG, ReColor, StAdv, and LPIPS) at 20 different attack strengths.
+    We provide <em>2 leaderboards</em> for the CIFAR-10 dataset: one with rankings based on average competitiveness ratio (CR<sub>ind-avg</sub> in paper) for measuring
+    average multiattack robustness and the other with rankings based on worst-case CR (CR<sub>ind-avg</sub> in paper) for
+    measuring worst-case multiattack robustness.  Users can toggle between these 2 leaderboards via the "Leaderboard selection" menu.  Our leaderboards also report stability constant (SC)
+    computed on this set of attacks. <em>We note that higher CR indicates better performance while lower SC indicates better performance</em> (although SC is best used only when comparing defenses which
+    us the same training threat model).</p>
+    <p>MultiRobustBench offers the following additional features:<ul>
+        <li><strong>User control of attack evaluation set:</strong> Under the "Attacks to use for metric computation" menu, users can select the set of attacks that 
+        they are interested in seeing performance scores of.  The attacks used for leaderboard rankings are by default selected.  Changing the set of selected attacks and 
+        pressing the "Refresh Leaderboard + Graphs" button will update the scores present on the leaderboard with the scores computed on the selected set.  We note that 
+        leaderboard rankings are not influenced by this change.</li>
+        <li><strong>Individual performance visualizations:</strong> While aggregate metrics such as CR and SC are useful for ranking performance, it is difficult to understand
+        weaknesses of specific defenses through these aggregate metrics.  To this end, we allow users to see several visualizations of performance by pressing the 
+        <img src="https://www.datatables.net/examples/resources/details_open.png"/> button next to entry of the defense of interest. These visualizations include a plot of 
+        the defense accuracy compared to training on each attack individually using adversarial training, defense accuracy as perturbation size increases for a selected 
+        attack type, a comparison of CR-in (CR computed on seen attacks) and CR-out (CR computed on unseen attacks) scores, and CR computed across each individual attack type.</li>
+        <li><strong>Performance comparison visualizations:</strong> We also allow users to see the above performance visualizations for up to 5 different defenses on the same 
+        graph for comparing different defenses.  To do this, users can select different defense entries by checking the select box in the rightmost column of the leaderboard.
+        Users can then press the "Compare Selected Defenses" button to see these graphs.</li>
+      </ul></p>
+    </div>
+    <div class="container body_container">
+            <div class="settings_menu" id="metric_block"></div>
+            <div class="settings_menu" id="select_block"></div>
+                <!--<div class="slidecontainer">
+                    <fieldset>
+                        <legend>Locality parameter:</legend>
+                        <div class="container" style="display: flex">
+                            <div id="range_object" style="width:90%">
+                                <input autocomplete="off" type="range" min="0" max="10" value="3" class="slider" id="alpha_range" onchange="update_val_display()">
+                            </div>
+                            <div id="range_value" class="center" style="flex-grow:1"></div>
+                        </div>
+                    </fieldset>
+                </div> -->
+            </div>
+        </div>
+        <div class='center body_container'>
+            <input type="submit" value="Refresh Leaderboard + Graphs" onclick="refreshLeaderboard()">
+            <input type="submit" id="generate_compare" value="Compare Selected Defenses" onclick="generateComparison()">
+            <input type="submit" id="close_compare" style="display: none" value="Close Comparison" onclick="closeComparison()">
+        </div>
+    </div>
+    <div class="body_container">
+    <div class="container" id="comparison_graphs" style="display: none">
+        <div class='container' style="display: flex">
+            <div class='graph_container' style='width:50%'><canvas id="selected_sc_multi" height="200"></canvas></div>
+            <div class='container' style="flex-grow:1">
+                    <div class='graph_container' id="comparison_attack_select"></div>
+                    <div class='container' style="display: flex">
+                    <div class='graph_container'  style="width:50%"><canvas id="selected_sc_single" height="200"></canvas></div>
+                    <div class='container' style="flex-grow:1">
+                        <div class='graph_container'><canvas id="selected_cr_in_out" height="200"></canvas></div>
+                    </div>
+                </div>
+                <div class='graph_container'><canvas id="selected_cr_single" height="100"></canvas></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="leaderboard_container" class="body_container">
+        <table id="leaderboard" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Rank</th>
+                    <th>Defense</th>
+                    <th>Clean Acc</th>
+                    <th>CR <div class="rotate_cw">&#8227;</div></th>
+                    <th>SC <div class="rotate_ccw">&#8227;</div></th>
+                    <th>% Attacks Seen</th>
+                    <th>Extra data</th>
+                    <th>Architecture</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard_body">
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Rank</th>
+                    <th>Defense</th>
+                    <th>Clean <br>Acc</th>
+                    <th>CR <div class="rotate_cw">&#8227;</div></th>
+                    <th>SC <div class="rotate_ccw">&#8227;</div></th>
+                    <th>% Attacks <br> Seen</th>
+                    <th>Extra <br>data</th>
+                    <th>Architecture</th>
+                    <th>Select</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+
+<script>
+$(document).ready(function () {
+    generateSelectMenu();
+    generateCRMenu();
+    generateLeaderboard();
+});
+</script>
