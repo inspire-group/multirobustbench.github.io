@@ -115,6 +115,7 @@ function generateLeaderboard() {
         table += `<td id="${defense}_cr">${cr}</td>`;
         table += `<td id="${defense}_sc">${sc}</td>`;
         table += `<td id="${defense}_seen">${seen_percs[i]}</td>`;
+        table += `<td id="${defense}_tc">${def_entry['Details']['Train Complexity']}</td>`;
         table += `<td id="${defense}_exdat">${dispTF(def_entry['Details']['Extra Data'])}</td>`;
         table += `<td id="${defense}_arch">${def_entry['Details']['Architecture']}</td>`;
         table += `<td id="${defense}_select"><input type="checkbox" id="${defense}_checkbox" name="${defense}_checkbox"></select>`;

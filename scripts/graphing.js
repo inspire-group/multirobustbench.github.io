@@ -258,7 +258,7 @@ function generateCRInOutPlots(id, values, colors) {
         data.push(cr_in_out_per_def[value]);
     }
     const config = getConfig('bar', ['CR in', 'CR out'], values, data,
-         colors, "", "Competitive Ratio", 'CR on seen attacks (CR in) and unseen attacks (CR out)');
+         colors, "", "Competitive Ratio", 'CR in and CR out');
     const myChart = new Chart(ctx, config);
     if (!(id in open_charts)) {
         open_charts[id] = {}
