@@ -20,12 +20,53 @@ var attacks = {
     'AffineWarp': 'Affine Warp',
     'PerspectiveWarp': 'Perspective Warp',
 
-    'LPIPSAttack': 'LPIPS'
+    'LPIPSAttack': 'LPIPS',
     //'WassersteinAttack': 'Wasserstein'
+
+    "gaussian_noise": "Gaussian Noise",
+"shot_noise": "Shot Noise",
+"impulse_noise": "Impulse Noise",
+"speckle_noise": "Speckle Noise",
+"gaussian_blur": "Gaussian Blur",
+"glass_blur": "Glass Blur",
+"defocus_blur": "Defocus Blur",
+"motion_blur": "Motion Blur",
+"zoom_blur": "Zoom Blur",
+"fog": "Fog",
+"frost": "Frost",
+"snow": "Snow",
+"spatter": "Splatter",
+"contrast": "Contrast",
+"brightness": "Brightness",
+"saturate": "Saturate",
+"jpeg_compression": "JPEG Compression",
+"pixelate": "Pixelate",
+"elastic_transform": "Elastic Transform"
 };
 
 const attacks_outside_ranking = ['FogAttack', 'GaborAttack', 'SnowAttack',
-'Hue', 'Saturation', 'Brightness', 'Contrast', 'AffineWarp', 'PerspectiveWarp']
+'Hue', 'Saturation', 'Brightness', 'Contrast', 'AffineWarp', 'PerspectiveWarp',
+"gaussian_noise",
+"shot_noise",
+"impulse_noise",
+"speckle_noise",
+"gaussian_blur",
+"glass_blur",
+"defocus_blur",
+"motion_blur",
+"zoom_blur",
+"fog",
+"frost",
+"snow",
+"spatter",
+"contrast",
+"brightness",
+"saturate",
+"jpeg_compression",
+"pixelate",
+"elastic_transform"]
+
+var groups_default_checked = ['Lp Attacks', 'Other'];
 
 var attack_grouping = {
     'Lp Attacks': ['AutoL1Attack',
@@ -49,6 +90,26 @@ var attack_grouping = {
     'StAdvAttack',
     'AffineWarp',
     'PerspectiveWarp'],
+
+    'CIFAR-10-C (Non-adversarial common corruptions)': ["gaussian_noise",
+    "shot_noise",
+    "impulse_noise",
+    "speckle_noise",
+    "gaussian_blur",
+    "glass_blur",
+    "defocus_blur",
+    "motion_blur",
+    "zoom_blur",
+    "fog",
+    "frost",
+    "snow",
+    "spatter",
+    "contrast",
+    "brightness",
+    "saturate",
+    "jpeg_compression",
+    "pixelate",
+    "elastic_transform"],
 
     'Other': ['LPIPSAttack']
 };
@@ -187,9 +248,11 @@ function CR_ind_avg(selected_set, def_accs, seen){
     var num_attacks = 1;
     var CR_single = [];
     for (const attack of selected_set) {
+        //console.log(attack)
         var frac_single = def_accs['NoAttack'] / ata_accs['NoAttack'];
         var num_attacks_single = 1;
         for (let eps in def_accs[attack]) {
+            //console.log(eps)
             const val = def_accs[attack][eps] / ata_accs[attack][eps];
             frac += val;
             frac_single += val;

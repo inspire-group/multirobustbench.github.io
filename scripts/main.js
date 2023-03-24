@@ -12,7 +12,12 @@ var leaderboard;
 function generateSelectMenu() {
     var select_menu = "<fieldset><legend>Attacks to use for metric computation:</legend>";
     for (let group in attack_grouping){
-        select_menu += `<fieldset><legend>${group}:</legend>`;
+        if (groups_default_checked.includes(group)){
+            select_menu += `<fieldset><legend><input type="checkbox" id="${group}_checkbox" name="${group}_checkbox" onchange="selectAll(this)" checked><label for="${group}_checkbox">${group}</label>:</legend>`;
+        }
+        else {
+            select_menu += `<fieldset><legend><input type="checkbox" id="${group}_checkbox" name="${group}_checkbox" onchange="selectAll(this)"><label for="${group}_checkbox">${group}</label>:</legend>`;
+        }
         for (const attack of attack_grouping[group]) {
             if (!attacks_outside_ranking.includes(attack)) {
                 select_menu += `<input type="checkbox" id="${attack}_checkbox" name="${attack}_checkbox" checked><label for="${attack}_checkbox">${attacks[attack]}</label><br>`;
@@ -25,6 +30,25 @@ function generateSelectMenu() {
     }
     select_menu += "</fieldset>"
     document.getElementById('select_block').innerHTML += select_menu;
+}
+
+function selectAll(obj) {
+    //console.log(obj);
+    var group_name = obj.id.split("_")[0]
+    if (obj.checked) {
+        for (const attack of attack_grouping[group_name]) {
+            var attack_ckbx = document.getElementById(`${attack}_checkbox`);
+            attack_ckbx.checked = true;
+        }
+    }
+    else {
+        for (const attack of attack_grouping[group_name]) {
+            var attack_ckbx = document.getElementById(`${attack}_checkbox`);
+            attack_ckbx.checked = false;
+        }
+    }
+    //console.log(group_name);
+    //console.log(obj.checked);
 }
 
 
