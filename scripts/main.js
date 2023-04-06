@@ -240,8 +240,10 @@ function refreshLeaderboard() {
         // update metrics
         for (var i = 0 ; i < defs.length; i++){
             const defense = defs[i];
+            //console.log(defense);
             let row = leaderboard.row(`#${defense}_row`);
             let row_data = row.data();
+            //console.log(row_data);
             row_data[1] = rankings.indexOf(i) + 1;
             row_data[4] = score[i][0];
             row_data[5] = score[i][1];

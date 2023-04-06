@@ -47,6 +47,11 @@
         <li><strong>Performance comparison visualizations:</strong> We also allow users to see the above performance visualizations for up to 5 different defenses on the same 
         graph for comparing different defenses.  To do this, users can select different defense entries by checking the select box in the rightmost column of the leaderboard.
         Users can then press the "Compare Selected Defenses" button to see these graphs.</li>
+        <li><strong>Estimation of training complexity:</strong> Existing defenses against multiple attacks are generally more computationally expensive than defenses 
+        against individual attacks.  Ideally, we would like to achieve to have robustness without significantly increasing the complexity of training.  In our leaderboard, 
+        we provide an estimate of training complexity in the PetaFLOPs (10<sup>15</sup> FLOPS) column of the table.  For each defense, we compute this value via: <br>
+        (number of FLOPs for a forward pass through the architecture) *  ((number of forward passes in 1 epoch of training) +  2 * (number of backwards passes in 1 epoch of training)) * (number of training data points per epoch) * (number of epochs)
+        </li>
       </ul></p>
 
       
