@@ -132,7 +132,12 @@ function generateLeaderboard() {
         table += `<tr data-child-value="${defense}" id="${defense}_row">`;
         table += `<td class="details-control"></td>`;
         table += `<td id="${defense}_rank">${rankings.indexOf(i) + 1}</td>`;
-        table += `<td id="${defense}_name"><a href="${def_entry['Details']['Paper URL']}">${def_entry['Details']['Title']}</a><br>${def_entry['Details']['Comments']}</td>`;
+        if (def_entry['Details']['Paper URL'] === "") {
+            table += `<td id="${defense}_name"><u>${def_entry['Details']['Title']}</u><br>${def_entry['Details']['Comments']}</td>`;
+        }
+        else{
+            table += `<td id="${defense}_name"><a href="${def_entry['Details']['Paper URL']}">${def_entry['Details']['Title']}</a><br>${def_entry['Details']['Comments']}</td>`;
+        }
         table += `<td id="${defense}_cleanacc">${dispNum(def_entry['Accuracies']['NoAttack'])}</td>`;
         const cr = score[i][0];
         const sc = score[i][1];
